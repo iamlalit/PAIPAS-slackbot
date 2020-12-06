@@ -1,0 +1,24 @@
+{
+  "name": "package.json",
+  "version": "1.0.0",
+  "description": "Simple Slack botIPAS",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamlalit/PAIPAS-slackbot.git"
+  },
+  "author": "Bolaji Ayodeji",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iamlalit/PAIPAS-slackbot.git"
+  },
+  "homepage": "https://github.com/iamlalit/PAIPAS-slackbot.git#readme",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "dotenv": "^8.2.0",
+    "slackbots": "^1.2.0"
+  }
+}
