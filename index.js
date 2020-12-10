@@ -9,7 +9,8 @@ const bot = new SlackBot({
     name: 'PAIPAS Bot'
 })
 
-const POST_URL = `${process.env.POST_URL}`
+const POST_URL = `${process.env.POST_URL}`;
+const BOT_CHANNEL = `${process.env.BOT_CHANNEL}`;
 
 // Error Handler
 bot.on('error', (err) => {
@@ -27,7 +28,7 @@ bot.on('message', (data) => {
         return;
     }
     //console.log(data);
-    if(data.text.includes("<@"+ bot.self.id +">"))
+    if(data.text.includes("<@"+ bot.self.id +">") || data.channel == BOT_CHANNEL)
     	handleMessage(data.text, data.channel, data.user);
 })
 
