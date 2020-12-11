@@ -27,7 +27,7 @@ bot.on('message', (data) => {
     if(data.type !== 'message' || data.subtype === 'bot_message') {
         return;
     }
-    //console.log(data);
+    console.log(data.channel);
     if(data.text.includes("<@"+ bot.self.id +">") || data.channel == BOT_CHANNEL)
     	handleMessage(data.text, data.channel, data.user);
 })
