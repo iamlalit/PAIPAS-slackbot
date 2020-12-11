@@ -81,7 +81,7 @@ function makeCall(message, channel_id, user_id, toi){
 function displayMessageOnSlack(status, channel_id, toi){
     var statusMessage = "Thanks! This "+ toi +" has been flagged and added to PAIPAS!";
     if(!status){
-    	statusMessage = "Error occur, cannot flag thi issue";
+    	statusMessage = "Error occur, cannot flag this issue, contact @Peter";
     }
     bot.postMessage(
         channel_id,
