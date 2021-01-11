@@ -6,6 +6,8 @@
   "scripts": {
     "start": "nodemon index.js"
   },
+  "web": "node index.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iamlalit/PAIPAS-slackbot.git"
@@ -19,6 +21,8 @@
   "dependencies": {
     "axios": "^0.21.0",
     "dotenv": "^8.2.0",
-    "slackbots": "^1.2.0"
+    "slackbots": "^1.2.0",
+    "express": "^4.15.2",
+    "normalize-port": "^1.0.0"
   }
 }

@@ -1,3 +1,6 @@
+const http = require('http');
+const express = require('express');
+
 const SlackBot = require('slackbots');
 const axios = require('axios');
 const dotenv = require('dotenv');
@@ -92,3 +95,12 @@ function displayMessageOnSlack(status, channel_id, toi){
 function streamlineMessage(message){
 	return message.replace("<@"+ bot.self.id +"> ", "");
 }
+
+// Create the server
+const port = normalizePort(process.env.PORT || '3100');
+const app = express();
+
+// Start the server
+http.createServer(app).listen(port, () => {
+  console.log(`server listening on port ${port}`);
+});
