@@ -101,6 +101,8 @@ function streamlineMessage(message){
 const port = normalizePort(process.env.PORT || '3100');
 const app = express();
 
+app.use(express.static(__dirname));
+
 // Start the server
 http.createServer(app).listen(port, () => {
   console.log(`server listening on port ${port}`);
