@@ -105,5 +105,10 @@ app.use(express.static(__dirname));
 
 // Start the server
 http.createServer(app).listen(port, () => {
-  console.log(`server listening on port ${port}`);
+    console.log(`server listening on port ${port}`);
+
+    bot.on('error', (err) => {
+        console.log(`${process.env.BOT_TOKEN}`);
+        console.log(err);
+    })
 });
