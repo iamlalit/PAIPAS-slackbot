@@ -32,8 +32,13 @@ bot.on('message', (data) => {
         return;
     }
     //console.log(data.channel);
-    if(data.text.includes("<@"+ bot.self.id +">") || data.channel == BOT_CHANNEL)
-    	handleMessage(data.text, data.channel, data.user);
+    if(typeof data !== "undefined"){
+        if(typeof data.text !== "undefined"){
+            if(data.channel == BOT_CHANNEL)
+                handleMessage(data.text, data.channel, data.user);    
+        }
+    }
+        
 })
 
 function handleMessage(message, channel_id, user_id) {
