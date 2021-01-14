@@ -31,8 +31,11 @@ bot.on('message', (data) => {
     if(data.type !== 'message' || data.subtype === 'bot_message') {
         return;
     }
-    if(data.channel == BOT_CHANNEL)
-        handleMessage(data.text, data.channel, data.user);
+    //console.log(data.channel);
+    if(typeof data.text !== "undefined"){
+        if(data.channel == BOT_CHANNEL){
+            handleMessage(data.text, data.channel, data.user);
+        }
     }
         
 })
