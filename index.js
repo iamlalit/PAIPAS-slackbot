@@ -33,11 +33,8 @@ bot.on('message', (data) => {
     }
     //console.log(data.channel);
     if(typeof data.text !== "undefined"){
-        if(data.channel == BOT_CHANNEL){
-            handleMessage(data.text, data.channel, data.user);
-        }
+        handleMessage(data.text, data.channel, data.user);
     }
-        
 })
 
 function handleMessage(message, channel_id, user_id) {
@@ -91,10 +88,12 @@ function displayMessageOnSlack(status, channel_id, toi){
     if(!status){
     	statusMessage = "Error occur, cannot flag this issue, contact @Peter";
     }
-    bot.postMessage(
-        channel_id,
-        statusMessage
-    );
+    window.setTimeout(function(){
+        bot.postMessage(
+            channel_id,
+            statusMessage
+        );    
+    }, 500)
 }
 
 function streamlineMessage(message){
