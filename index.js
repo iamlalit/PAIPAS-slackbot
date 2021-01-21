@@ -31,7 +31,7 @@ bot.on('message', (data) => {
     if(data.type !== 'message' || data.subtype === 'bot_message') {
         return;
     }
-    //console.log(data.channel);
+    console.log(data.text);
     if(typeof data.text !== "undefined"){
         handleMessage(data.text, data.channel, data.user);
     }
@@ -88,7 +88,7 @@ function displayMessageOnSlack(status, channel_id, toi){
     if(!status){
     	statusMessage = "Error occur, cannot flag this issue, contact @Peter";
     }
-    window.setTimeout(function(){
+    setTimeout(function(){
         bot.postMessage(
             channel_id,
             statusMessage
