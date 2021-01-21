@@ -22,8 +22,8 @@ bot.on('error', (err) => {
     console.log(err);
 })
 
-bot.on('start', () => {
-    
+bot.on('start', (e) => {
+    //console.log(bot);
 })
 
 // Message Handler
@@ -31,9 +31,18 @@ bot.on('message', (data) => {
     if(data.type !== 'message' || data.subtype === 'bot_message') {
         return;
     }
-    console.log(data.text);
-    if(typeof data.text !== "undefined"){
-        handleMessage(data.text, data.channel, data.user);
+    //console.log(data.channel);
+    //console.log(/^D/.test(data.channel));
+    if(/^D/.test(data.channel)){
+        if(typeof data.text !== "undefined"){
+            handleMessage(data.text, data.channel, data.user);
+        }
+    }else{
+        if(typeof data.text !== "undefined"){
+            if((data.text).includes("<@"+ bot.self.id +">")){
+                handleMessage(data.text, data.channel, data.user);
+            }
+        }
     }
 })
 
