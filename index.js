@@ -22,8 +22,8 @@ bot.on('error', (err) => {
     console.log(err);
 })
 
-bot.on('start', () => {
-    
+bot.on('start', (e) => {
+    //console.log(bot);
 })
 
 // Message Handler
@@ -32,8 +32,17 @@ bot.on('message', (data) => {
         return;
     }
     //console.log(data.channel);
-    if(typeof data.text !== "undefined"){
-        handleMessage(data.text, data.channel, data.user);
+    //console.log(/^D/.test(data.channel));
+    if(/^D/.test(data.channel)){
+        if(typeof data.text !== "undefined"){
+            handleMessage(data.text, data.channel, data.user);
+        }
+    }else{
+        if(typeof data.text !== "undefined"){
+            if((data.text).includes("<@"+ bot.self.id +">")){
+                handleMessage(data.text, data.channel, data.user);
+            }
+        }
     }
 })
 
@@ -88,7 +97,7 @@ function displayMessageOnSlack(status, channel_id, toi){
     if(!status){
     	statusMessage = "Error occur, cannot flag this issue, contact @Peter";
     }
-    window.setTimeout(function(){
+    setTimeout(function(){
         bot.postMessage(
             channel_id,
             statusMessage

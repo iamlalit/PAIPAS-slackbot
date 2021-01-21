@@ -1,7 +1,7 @@
 {
   "name": "package.json",
   "version": "1.0.0",
-  "description": "Simple Slack botIPAS",
+  "description": "Simple Slack bot PAIPAS",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js"
