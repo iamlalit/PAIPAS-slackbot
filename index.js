@@ -31,12 +31,12 @@ bot.on('message', (data) => {
     if(data.type !== 'message' || data.subtype === 'bot_message') {
         return;
     }
-    //console.log(data.thread_ts);
+    console.log(data.ts);
     //console.log(/^D/.test(data.channel));
     if(/^D/.test(data.channel)){
         if(typeof data.text !== "undefined"){
-            if(typeof data.thread_ts !== "undefined"){
-                handleMessage(data.text, data.channel, data.user, data.thread_ts);
+            if(typeof data.ts !== "undefined"){
+                handleMessage(data.text, data.channel, data.user, data.ts);
             }else{
                 handleMessage(data.text, data.channel, data.user, "");    
             }
@@ -44,8 +44,8 @@ bot.on('message', (data) => {
     }else{
         if(typeof data.text !== "undefined"){
             if((data.text).includes("<@"+ bot.self.id +">")){
-                if(typeof data.thread_ts !== "undefined"){
-                    handleMessage(data.text, data.channel, data.user, data.thread_ts);
+                if(typeof data.ts !== "undefined"){
+                    handleMessage(data.text, data.channel, data.user, data.ts);
                 }else{
                     handleMessage(data.text, data.channel, data.user, "");    
                 }
