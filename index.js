@@ -31,68 +31,77 @@ bot.on('message', (data) => {
     if(data.type !== 'message' || data.subtype === 'bot_message') {
         return;
     }
-    //console.log(data.channel);
+    //console.log(data.thread_ts);
     //console.log(/^D/.test(data.channel));
     if(/^D/.test(data.channel)){
         if(typeof data.text !== "undefined"){
-            handleMessage(data.text, data.channel, data.user);
+            if(typeof data.thread_ts !== "undefined"){
+                handleMessage(data.text, data.channel, data.user, data.thread_ts);
+            }else{
+                handleMessage(data.text, data.channel, data.user, "");    
+            }
         }
     }else{
         if(typeof data.text !== "undefined"){
             if((data.text).includes("<@"+ bot.self.id +">")){
-                handleMessage(data.text, data.channel, data.user);
+                if(typeof data.thread_ts !== "undefined"){
+                    handleMessage(data.text, data.channel, data.user, data.thread_ts);
+                }else{
+                    handleMessage(data.text, data.channel, data.user, "");    
+                }
             }
         }
     }
 })
 
-function handleMessage(message, channel_id, user_id) {
+function handleMessage(message, channel_id, user_id, thread_ts) {
     if(message.includes('@pain')) {
-        painSwitch(message, channel_id, user_id);
+        painSwitch(message, channel_id, user_id, thread_ts);
     } else if(message.includes('@issue')) {
-        issueSwitch(message, channel_id, user_id);
+        issueSwitch(message, channel_id, user_id, thread_ts);
     } else if(message.includes('@solution')) {
-        solutionSwitch(message, channel_id, user_id);
+        solutionSwitch(message, channel_id, user_id, thread_ts);
     }else if(message.includes('@help')) {
-        helpSwitch("Send a message to the @PAIPAS Bot, with the message contains the follow keywords: @pain, or @issue, or @solution", channel_id);
+        helpSwitch("Send a message to the @PAIPAS Bot, with the message contains the follow keywords: @pain, or @issue, or @solution", channel_id, thread_ts);
     } else{
-    	painSwitch(message, channel_id, user_id);
+    	painSwitch(message, channel_id, user_id, thread_ts);
     }
 }
 
-function painSwitch(message, channel_id, user_id){
-	makeCall(message, channel_id, user_id, 'pain');
+function painSwitch(message, channel_id, user_id, thread_ts){
+	makeCall(message, channel_id, user_id, 'pain', thread_ts);
 }
 
-function issueSwitch(message, channel_id, user_id){
+function issueSwitch(message, channel_id, user_id, thread_ts){
 	makeCall(message, channel_id, user_id, 'issue');
 }
 
-function solutionSwitch(message, channel_id, user_id){
-	makeCall(message, channel_id, user_id, 'solution');
+function solutionSwitch(message, channel_id, user_id, thread_ts){
+	makeCall(message, channel_id, user_id, 'solution', thread_ts);
 }
 
-function helpSwitch(statusMessage, channel_id){
+function helpSwitch(statusMessage, channel_id, thread_ts){
 	bot.postMessage(
         channel_id,
-        statusMessage
+        statusMessage,
+        thread_ts
     );
 }
 
-function makeCall(message, channel_id, user_id, toi){
+function makeCall(message, channel_id, user_id, toi, thread_ts){
 	axios.post(POST_URL, {
 		'slack_user_id': user_id,
 		'message': streamlineMessage(message),
 		'type_of_input': toi
 	}).then(function (response) {
-		displayMessageOnSlack(true, channel_id, toi);
+		displayMessageOnSlack(true, channel_id, toi, thread_ts);
 	}).catch(function (error) {
 		//console.log(error);
-		displayMessageOnSlack(false, channel_id, toi);
+		displayMessageOnSlack(false, channel_id, toi, thread_ts);
 	});
 }
 
-function displayMessageOnSlack(status, channel_id, toi){
+function displayMessageOnSlack(status, channel_id, toi, thread_ts){
     var statusMessage = "Thanks! This "+ toi +" has been flagged and added to PAIPAS!";
     if(!status){
     	statusMessage = "Error occur, cannot flag this issue, contact @Peter";
@@ -100,7 +109,8 @@ function displayMessageOnSlack(status, channel_id, toi){
     setTimeout(function(){
         bot.postMessage(
             channel_id,
-            statusMessage
+            statusMessage,
+            thread_ts
         );    
     }, 500)
 }
