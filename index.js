@@ -46,11 +46,11 @@ bot.on('message', (data) => {
         }
     }
 
-    function callHandleMessage(data, image_url){
+    function callHandleMessage(data, img_url){
         if(typeof data.ts !== "undefined"){
-            handleMessage(data.text, image_url, data.channel, data.user, data.ts);
+            handleMessage(data.text, img_url, data.channel, data.user, data.ts);
         }else{
-            handleMessage(data.text, image_url, data.channel, data.user, "");    
+            handleMessage(data.text, img_url, data.channel, data.user, "");    
         }
     }
 
