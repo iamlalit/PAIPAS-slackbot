@@ -10,6 +10,7 @@ dotenv.config();
 
 const bot = new SlackBot({
     token: `${process.env.BOT_TOKEN}`,
+    oAuthToken: `${process.env.OAUTH_TOKEN}`,
     name: 'PAIPAS Bot'
 })
 
@@ -31,53 +32,70 @@ bot.on('message', (data) => {
     if(data.type !== 'message' || data.subtype === 'bot_message') {
         return;
     }
-    console.log(data.ts);
+    //console.log(data.ts);
     //console.log(/^D/.test(data.channel));
     if(/^D/.test(data.channel)){
         if(typeof data.text !== "undefined"){
-            if(typeof data.ts !== "undefined"){
-                handleMessage(data.text, data.channel, data.user, data.ts);
-            }else{
-                handleMessage(data.text, data.channel, data.user, "");    
-            }
+            getMessageCreatedWithOrWithoutImage(data);
         }
     }else{
         if(typeof data.text !== "undefined"){
             if((data.text).includes("<@"+ bot.self.id +">")){
-                if(typeof data.ts !== "undefined"){
-                    handleMessage(data.text, data.channel, data.user, data.ts);
-                }else{
-                    handleMessage(data.text, data.channel, data.user, "");    
-                }
+                getMessageCreatedWithOrWithoutImage(data);
             }
         }
     }
+
+    function callHandleMessage(data, image_url){
+        if(typeof data.ts !== "undefined"){
+            handleMessage(data.text, image_url, data.channel, data.user, data.ts);
+        }else{
+            handleMessage(data.text, image_url, data.channel, data.user, "");    
+        }
+    }
+
+    function getMessageCreatedWithOrWithoutImage(data){
+        if(typeof data.files !== "undefined"){
+            if(data.files.length >= 1){
+                bot.sharedPublicURL(data.files[0].id).then(function (response) {
+                    callHandleMessage(data, response.file.permalink_public);
+                }).catch(function (error) {
+                    callHandleMessage(data, "");
+                });
+            }else{
+                callHandleMessage(data, "");
+            }
+        }else{
+            callHandleMessage(data, "");
+        }
+        
+    }
 })
 
-function handleMessage(message, channel_id, user_id, thread_ts) {
+function handleMessage(message, img_url, channel_id, user_id, thread_ts) {
     if(message.includes('@pain')) {
-        painSwitch(message, channel_id, user_id, thread_ts);
+        painSwitch(message, img_url, channel_id, user_id, thread_ts);
     } else if(message.includes('@issue')) {
-        issueSwitch(message, channel_id, user_id, thread_ts);
+        issueSwitch(message, img_url, channel_id, user_id, thread_ts);
     } else if(message.includes('@solution')) {
-        solutionSwitch(message, channel_id, user_id, thread_ts);
+        solutionSwitch(message, img_url, channel_id, user_id, thread_ts);
     }else if(message.includes('@help')) {
-        helpSwitch("Send a message to the @PAIPAS Bot, with the message contains the follow keywords: @pain, or @issue, or @solution", channel_id, thread_ts);
+        helpSwitch("Send a message to the @PAIPAS Bot, with the message contains the follow keywords: @pain, or @issue, or @solution", channel_id, "");
     } else{
-    	painSwitch(message, channel_id, user_id, thread_ts);
+    	painSwitch(message, img_url, channel_id, user_id, thread_ts);
     }
 }
 
-function painSwitch(message, channel_id, user_id, thread_ts){
-	makeCall(message, channel_id, user_id, 'pain', thread_ts);
+function painSwitch(message, img_url, channel_id, user_id, thread_ts){
+	makeCall(message, img_url, channel_id, user_id, 'pain', thread_ts);
 }
 
-function issueSwitch(message, channel_id, user_id, thread_ts){
-	makeCall(message, channel_id, user_id, 'issue');
+function issueSwitch(message, img_url, channel_id, user_id, thread_ts){
+	makeCall(message, img_url, channel_id, user_id, 'issue', thread_ts);
 }
 
-function solutionSwitch(message, channel_id, user_id, thread_ts){
-	makeCall(message, channel_id, user_id, 'solution', thread_ts);
+function solutionSwitch(message, img_url, channel_id, user_id, thread_ts){
+	makeCall(message, img_url, channel_id, user_id, 'solution', thread_ts);
 }
 
 function helpSwitch(statusMessage, channel_id, thread_ts){
@@ -88,10 +106,11 @@ function helpSwitch(statusMessage, channel_id, thread_ts){
     );
 }
 
-function makeCall(message, channel_id, user_id, toi, thread_ts){
+function makeCall(message, img_url, channel_id, user_id, toi, thread_ts){
 	axios.post(POST_URL, {
 		'slack_user_id': user_id,
 		'message': streamlineMessage(message),
+        'image_url': img_url,
 		'type_of_input': toi
 	}).then(function (response) {
 		displayMessageOnSlack(true, channel_id, toi, thread_ts);
