@@ -32,7 +32,7 @@ bot.on('message', (data) => {
     if(data.type !== 'message' || data.subtype === 'bot_message') {
         return;
     }
-    //console.log(data.ts);
+    //console.log(data);
     //console.log(/^D/.test(data.channel));
     if(/^D/.test(data.channel)){
         if(typeof data.text !== "undefined"){
@@ -107,7 +107,7 @@ function helpSwitch(statusMessage, channel_id, thread_ts){
 }
 
 function makeCall(message, img_url, channel_id, user_id, toi, thread_ts){
-	axios.post(POST_URL, {
+    axios.post(POST_URL, {
 		'slack_user_id': user_id,
 		'message': streamlineMessage(message),
         'image_url': img_url,
