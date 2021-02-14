@@ -57,7 +57,7 @@ bot.on('message', (data) => {
     function getMessageCreatedWithOrWithoutImage(data){
         if(typeof data.files !== "undefined"){
             if(data.files.length >= 1){
-                callHandleMessage(data, data.files[0].permalink_public);
+                callHandleMessage(data, normalizeImageURL(data.files[0]));
             }else{
                 callHandleMessage(data, "");
             }
@@ -65,6 +65,14 @@ bot.on('message', (data) => {
             callHandleMessage(data, "");
         }
         
+    }
+
+    function normalizeImageURL(file){
+        var publicURL = file.permalink_public;
+        publicURL = publicURL.split("-");
+        var pub_secret = publicURL[publicURL.length - 1];
+
+        return file.url_private + "?pub_secret=" + pub_secret
     }
 })
 
