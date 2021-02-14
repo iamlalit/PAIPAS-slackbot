@@ -32,7 +32,7 @@ bot.on('message', (data) => {
     if(data.type !== 'message' || data.subtype === 'bot_message') {
         return;
     }
-    //console.log(data.ts);
+    console.log(data);
     //console.log(/^D/.test(data.channel));
     if(/^D/.test(data.channel)){
         if(typeof data.text !== "undefined"){
@@ -57,11 +57,7 @@ bot.on('message', (data) => {
     function getMessageCreatedWithOrWithoutImage(data){
         if(typeof data.files !== "undefined"){
             if(data.files.length >= 1){
-                bot.sharedPublicURL(data.files[0].id).then(function (response) {
-                    callHandleMessage(data, response.file.permalink_public);
-                }).catch(function (error) {
-                    callHandleMessage(data, "");
-                });
+                callHandleMessage(data, data.files[0].permalink_public);
             }else{
                 callHandleMessage(data, "");
             }
